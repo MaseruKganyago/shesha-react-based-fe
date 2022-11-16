@@ -30,7 +30,8 @@ const INITIAL_STATE_FORM_LOADER: IFormLoader = {
 
 export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = ({ formId }) => {
   const [form] = Form.useForm<ComponentDto>();
-  const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest } = useTreeHierachy();
+  const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest, toggleFormRendererMode } =
+    useTreeHierachy();
   const [showSkeleton, setShowSkeleton] = useState<IFormLoader>(INITIAL_STATE_FORM_LOADER);
 
   const isCreateMode = componentCreateEditState?.mode === 'create';
@@ -40,6 +41,12 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
   const { mutate: createUpdateComponentHttp, loading } = useMutate({
     path: `/api/services/Epm/Component/${verbPath?.path}`,
     verb: verbPath?.verb as any,
+  });
+
+  const { mutate: deleteComponent, loading: isDeleting } = useMutate({
+    path: `/api/services/Epm/Component/Delete`,
+    verb: 'DELETE',
+    queryParams: { id: selectedTreeNode?.key },
   });
 
   useEffect(() => {
@@ -60,13 +67,26 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
       createUpdateComponentHttp(payload).then((res) => {
         if (res?.success) {
           message.success(`Component was succesfull ${verbPath?.path}d.`);
+          toggleFormRendererMode(null);
           fetchTreeDataRequest();
         }
       });
     });
   };
 
-  console.log('showSkeleton?.doneLoading :>> ', showSkeleton?.doneLoading);
+  const handleCancel = () => {
+    toggleFormRendererMode(null);
+  };
+
+  const handleDelete = () => {
+    deleteComponent({}).then((res) => {
+      if (res?.success) {
+        message.success(`Component was succesfull Deleted.`);
+        fetchTreeDataRequest();
+      }
+    });
+  };
+
   return (
     <div className="tree-hierachy-maintenance-forms">
       {showSkeleton?.doneLoading ? (
@@ -89,14 +109,14 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
 
       <TreeHierachyMaintenanceBtnsFooter className="tree-hierachy-maintenance-btns-footer">
         <DeleteButton className="delete-btn">
-          <Button type="primary" danger disabled={isCreateMode}>
+          <Button onClick={handleDelete} type="primary" danger disabled={isCreateMode}>
             Delete
           </Button>
         </DeleteButton>
 
         <div className="cancel-save-btns">
           <Space>
-            <Button>Cancel</Button>
+            <Button onClick={handleCancel}>Cancel</Button>
 
             <Button type="primary" onClick={handleSubmit} loading={loading}>
               Save
