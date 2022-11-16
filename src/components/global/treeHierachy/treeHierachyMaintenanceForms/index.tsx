@@ -1,11 +1,12 @@
 import { ConfigurableForm } from '@shesha/reactjs';
 import { Button, Divider, Form, message, Result, Space } from 'antd';
+import { TreeHierachyFormsSkeleton } from 'components';
 import _ from 'lodash';
 import { ComponentDto } from 'models/component';
 import { useTreeHierachy } from 'providers';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useMutate } from 'restful-react';
-import { DeleteButton, TreeHierachyMaintenanceBtnsFooter } from './styles';
+import { DeleteButton, DynamicForm, TreeHierachyMaintenanceBtnsFooter } from './styles';
 import { initiateValues, prepareFormForEdit, preparePayload } from './util';
 
 export interface ITreeHierachyMaintenanceForms {
@@ -17,9 +18,20 @@ interface IApiVerbPath {
   path: string;
 }
 
+export interface IFormLoader {
+  showSkeleton?: boolean;
+  doneLoading?: boolean;
+}
+
+const INITIAL_STATE_FORM_LOADER: IFormLoader = {
+  showSkeleton: false,
+  doneLoading: false,
+};
+
 export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = ({ formId }) => {
   const [form] = Form.useForm<ComponentDto>();
   const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest } = useTreeHierachy();
+  const [showSkeleton, setShowSkeleton] = useState<IFormLoader>(INITIAL_STATE_FORM_LOADER);
 
   const isCreateMode = componentCreateEditState?.mode === 'create';
   const isEditMode = componentCreateEditState?.mode === 'edit';
@@ -29,6 +41,18 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     path: `/api/services/Epm/Component/${verbPath?.path}`,
     verb: verbPath?.verb as any,
   });
+
+  useEffect(() => {
+    setShowSkeleton({ ...showSkeleton, doneLoading: false });
+  }, [componentCreateEditState?.mode]);
+
+  useEffect(() => {
+    if (!_.isEmpty(selectedTreeNode?.key) && isCreateMode)
+      form.setFieldsValue({ ...form.getFieldsValue(), parent: selectedTreeNode?.key.toString() });
+    else if (isEditMode) {
+      prepareFormForEdit(form, selectedTreeNode);
+    }
+  }, [selectedTreeNode]);
 
   const handleSubmit = () => {
     form.validateFields().then((values) => {
@@ -42,25 +66,23 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     });
   };
 
-  useEffect(() => {
-    if (!_.isEmpty(selectedTreeNode?.key) && isCreateMode)
-      form.setFieldsValue({ ...form.getFieldsValue(), parent: selectedTreeNode?.key.toString() });
-    else if (isEditMode) {
-      prepareFormForEdit(form, selectedTreeNode);
-    }
-  }, [selectedTreeNode]);
-
+  console.log('showSkeleton?.doneLoading :>> ', showSkeleton?.doneLoading);
   return (
     <div className="tree-hierachy-maintenance-forms">
-      <ConfigurableForm
-        mode="edit"
-        form={form}
-        formId={formId}
-        initialValues={!isCreateMode && initiateValues(selectedTreeNode)}
-        layout="horizontal"
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 13 }}
-      />
+      {showSkeleton?.doneLoading ? (
+        <DynamicForm
+          className="dynamic-form"
+          mode="edit"
+          form={form}
+          formId={formId}
+          initialValues={!isCreateMode && initiateValues(selectedTreeNode)}
+          layout="horizontal"
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 13 }}
+        />
+      ) : (
+        <TreeHierachyFormsSkeleton formId={formId} {...{ showSkeleton, setShowSkeleton }} />
+      )}
 
       <div style={{ marginBottom: '15px' }} />
       <Divider />

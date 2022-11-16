@@ -32,3 +32,4 @@ export { default as TempSummaryDrawerTable } from './pages/performance-report-pl
 export { default as CustomToolbarDropdown } from './global/customToolbarDropdown';
 export { default as TreeNodeIconRenderer } from './global/treeNodeIconRenderer';
 export { default as TreeHierachyMaintenanceForms } from './global/treeHierachy/treeHierachyMaintenanceForms';
+export { default as TreeHierachyFormsSkeleton } from './global/treeHierachy/treeHierachyFormsSkeleton';
