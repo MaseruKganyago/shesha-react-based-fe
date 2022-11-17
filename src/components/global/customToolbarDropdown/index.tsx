@@ -29,7 +29,10 @@ const CustomToolbarDropdown: FC<ICustomToolbarDropdownProps> = ({ onClick, icon,
       .map((a) => ({ label: a.componentTypeName, key: `${a.formPath}~${a.componentTypeId}` })) ?? [];
 
   useEffect(() => {
-    if (!_.isEmpty(templateId)) refetch();
+    if (!_.isEmpty(templateId)) {
+      console.log('refetched :>> ');
+      refetch();
+    }
   }, [templateId, selectedTreeNode]);
 
   return (

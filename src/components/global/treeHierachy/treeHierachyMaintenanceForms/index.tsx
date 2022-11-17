@@ -51,7 +51,7 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
 
   useEffect(() => {
     setShowSkeleton({ ...showSkeleton, doneLoading: false });
-  }, [componentCreateEditState?.mode]);
+  }, [componentCreateEditState]);
 
   useEffect(() => {
     if (!_.isEmpty(selectedTreeNode?.key) && isCreateMode)
