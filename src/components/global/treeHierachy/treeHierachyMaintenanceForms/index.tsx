@@ -1,12 +1,11 @@
-import { ConfigurableForm } from '@shesha/reactjs';
-import { Button, Divider, Form, message, Result, Space } from 'antd';
-import { TreeHierachyFormsSkeleton } from 'components';
+import { Button, Divider, Form, message, Space } from 'antd';
+import { MaintenanceFormsDeleteButton, TreeHierachyFormsSkeleton } from 'components';
 import _ from 'lodash';
 import { ComponentDto } from 'models/component';
 import { useTreeHierachy } from 'providers';
 import { FC, useEffect, useState } from 'react';
 import { useMutate } from 'restful-react';
-import { DeleteButton, DynamicForm, TreeHierachyMaintenanceBtnsFooter } from './styles';
+import { StyledConfigurableForm, TreeHierachyMaintenanceBtnsFooter } from './styles';
 import { initiateValues, prepareFormForEdit, preparePayload } from './util';
 
 export interface ITreeHierachyMaintenanceForms {
@@ -43,12 +42,6 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     verb: verbPath?.verb as any,
   });
 
-  const { mutate: deleteComponent, loading: isDeleting } = useMutate({
-    path: `/api/services/Epm/Component/Delete`,
-    verb: 'DELETE',
-    queryParams: { id: selectedTreeNode?.key },
-  });
-
   useEffect(() => {
     setShowSkeleton({ ...showSkeleton, doneLoading: false });
   }, [componentCreateEditState]);
@@ -78,19 +71,10 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     toggleFormRendererMode(null);
   };
 
-  const handleDelete = () => {
-    deleteComponent({}).then((res) => {
-      if (res?.success) {
-        message.success(`Component was succesfull Deleted.`);
-        fetchTreeDataRequest();
-      }
-    });
-  };
-
   return (
     <div className="tree-hierachy-maintenance-forms">
       {showSkeleton?.doneLoading ? (
-        <DynamicForm
+        <StyledConfigurableForm
           className="dynamic-form"
           mode="edit"
           form={form}
@@ -108,11 +92,7 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
       <Divider />
 
       <TreeHierachyMaintenanceBtnsFooter className="tree-hierachy-maintenance-btns-footer">
-        <DeleteButton className="delete-btn">
-          <Button onClick={handleDelete} type="primary" danger disabled={isCreateMode}>
-            Delete
-          </Button>
-        </DeleteButton>
+        <MaintenanceFormsDeleteButton />
 
         <div className="cancel-save-btns">
           <Space>

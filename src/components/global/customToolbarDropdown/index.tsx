@@ -30,7 +30,6 @@ const CustomToolbarDropdown: FC<ICustomToolbarDropdownProps> = ({ onClick, icon,
 
   useEffect(() => {
     if (!_.isEmpty(templateId)) {
-      console.log('refetched :>> ');
       refetch();
     }
   }, [templateId, selectedTreeNode]);
