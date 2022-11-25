@@ -1,7 +1,8 @@
 import { Button, Divider, Form, message, Space } from 'antd';
+import { DynamicDtoComponentGuid } from 'api/component';
 import { MaintenanceFormsDeleteButton, TreeHierachyFormsSkeleton } from 'components';
 import _ from 'lodash';
-import { ComponentDto } from 'models/component';
+import { useRouter } from 'next/router';
 import { useTreeHierachy } from 'providers';
 import { FC, useEffect, useState } from 'react';
 import { useMutate } from 'restful-react';
@@ -28,10 +29,18 @@ const INITIAL_STATE_FORM_LOADER: IFormLoader = {
 };
 
 export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = ({ formId }) => {
-  const [form] = Form.useForm<ComponentDto>();
-  const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest, toggleFormRendererMode } =
-    useTreeHierachy();
+  const [form] = Form.useForm<DynamicDtoComponentGuid>();
+  const {
+    componentCreateEditState,
+    selectedTreeNode,
+    selectedComponentDetails,
+    fetchTreeDataRequest,
+    toggleFormRendererMode,
+  } = useTreeHierachy();
   const [showSkeleton, setShowSkeleton] = useState<IFormLoader>(INITIAL_STATE_FORM_LOADER);
+  const {
+    query: { id },
+  } = useRouter();
 
   const isCreateMode = componentCreateEditState?.mode === 'create';
   const isEditMode = componentCreateEditState?.mode === 'edit';
@@ -50,9 +59,9 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     if (!_.isEmpty(selectedTreeNode?.key) && isCreateMode)
       form.setFieldsValue({ ...form.getFieldsValue(), parent: selectedTreeNode?.key.toString() });
     else if (isEditMode) {
-      prepareFormForEdit(form, selectedTreeNode);
+      prepareFormForEdit(form, selectedComponentDetails);
     }
-  }, [selectedTreeNode]);
+  }, [selectedTreeNode, selectedComponentDetails]);
 
   const handleSubmit = () => {
     form.validateFields().then((values) => {
@@ -61,7 +70,7 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
         if (res?.success) {
           message.success(`Component was succesfull ${verbPath?.path}d.`);
           toggleFormRendererMode(null);
-          fetchTreeDataRequest();
+          fetchTreeDataRequest(id.toString());
         }
       });
     });
@@ -79,7 +88,7 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
           mode="edit"
           form={form}
           formId={formId}
-          initialValues={!isCreateMode && initiateValues(selectedTreeNode)}
+          initialValues={!isCreateMode && initiateValues(selectedComponentDetails)}
           layout="horizontal"
           labelCol={{ span: 5 }}
           wrapperCol={{ span: 13 }}

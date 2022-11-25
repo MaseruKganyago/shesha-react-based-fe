@@ -21,7 +21,9 @@ export function treeHierachyReducer(
     case TreeHierachyActionEnums.FetchTreeDataError:
     case TreeHierachyActionEnums.StoreSelectedTreeNode:
     case TreeHierachyActionEnums.ActionComponentEdit:
-      /* NEW_ACTION_ENUM_GOES_HERE */
+      case TreeHierachyActionEnums.StoreTreeComponent:	
+/* NEW_ACTION_ENUM_GOES_HERE */
+
 
       return {
         ...state,

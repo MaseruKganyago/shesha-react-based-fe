@@ -1,4 +1,5 @@
 import { Button, message, notification, Popconfirm } from 'antd';
+import { useRouter } from 'next/router';
 import { useTreeHierachy } from 'providers';
 import { FC } from 'react';
 import { useMutate } from 'restful-react';
@@ -8,6 +9,9 @@ interface IMaintenanceFormsDeleteButton {}
 
 const MaintenanceFormsDeleteButton: FC<IMaintenanceFormsDeleteButton> = () => {
   const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest } = useTreeHierachy();
+  const {
+    query: { id },
+  } = useRouter();
 
   const isCreateMode = componentCreateEditState?.mode === 'create';
 
@@ -28,7 +32,7 @@ const MaintenanceFormsDeleteButton: FC<IMaintenanceFormsDeleteButton> = () => {
       deleteComponent({}).then((res) => {
         if (res?.success) {
           message.success(`Component was succesfull Deleted.`);
-          fetchTreeDataRequest();
+          fetchTreeDataRequest(id.toString());
         }
       });
   };

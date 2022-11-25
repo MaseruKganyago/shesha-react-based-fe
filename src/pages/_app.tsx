@@ -14,7 +14,7 @@ import {
 import { CustomErrorBoundary, CustomNProgress } from 'components';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { TreeHiearachyProvider } from 'providers';
+import { GlobalConfigManagerProvider, TreeHiearachyProvider } from 'providers';
 import React, { useEffect } from 'react';
 import { BASE_URL } from 'src/api/utils/constants';
 import { StyledThemeProvider } from 'src/definitions/styled-components';
@@ -45,9 +45,11 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
             <DynamicModalProvider>
               <CustomNProgress />
               <StoredFilesProvider baseUrl={BASE_URL} ownerId={''} ownerType={''}>
-                <TreeHiearachyProvider>
-                  <UiProvider>{getLayout(<Component {...(router?.query || {})} {...pageProps} />)}</UiProvider>
-                </TreeHiearachyProvider>
+                <GlobalConfigManagerProvider>
+                  <TreeHiearachyProvider>
+                    <UiProvider>{getLayout(<Component {...(router?.query || {})} {...pageProps} />)}</UiProvider>
+                  </TreeHiearachyProvider>
+                </GlobalConfigManagerProvider>
               </StoredFilesProvider>
             </DynamicModalProvider>
           </ShaApplicationProvider>

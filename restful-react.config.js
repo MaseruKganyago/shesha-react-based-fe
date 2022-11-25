@@ -1,37 +1,15 @@
 const camelCase = require('camelcase');
-const BASE_URL = 'http://localhost:21021';
+const BASE_URL = 'https://epmtemp-api-test.azurewebsites.net';
 const ROOT_PATH = './src/api';
 const fs = require('fs');
 
 const API_LIST = [
-  'AuthorizationSettings',
-  'BulkSms',
-  'CheckList',
-  'CheckListItem',
-  'Clickatell',
-  'EmailSender',
-  'Form',
-  'Ldap',
-  'Maintenance',
-  'MobileDevice',
-  'Notification',
-  'NotificationMessage',
-  'NotificationTemplate',
-  'Otp',
-  'OtpAuditItem',
-  'Person',
-  'PushNotifiers',
-  'PushSettings',
-  'ReferenceList',
-  'ReferenceListItem',
-  'ScheduledJob',
-  'ScheduledJobExecution',
-  'ScheduledJobTrigger',
-  'SmsGateways',
-  'SmsPortal',
-  'SmsSettings',
-  'User',
-  'Xml2Sms',
+'Components',
+'Component',
+'PerformanceReportAllowedComponentTypes',
+'Persons',
+'ProgressReports',
+'PerformanceReport'
 ];
 
 const onlyUpdateExisting = false;

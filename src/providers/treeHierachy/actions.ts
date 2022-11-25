@@ -1,3 +1,4 @@
+import { DynamicDtoComponentGuid } from 'api/component';
 import { FlattenedAllowedComponentTypesDto } from 'models';
 import { IComponentCreateEditState, CustomDataNode } from 'models/treeHierachy';
 import { createAction } from 'redux-actions';
@@ -13,6 +14,7 @@ export enum TreeHierachyActionEnums {
   FetchTreeDataError = 'FETCH_TREE_DATA_ERROR',
   StoreSelectedTreeNode = 'STORE_SELECTED_TREE_NODE',
   ActionComponentEdit = 'ACTION_COMPONENT_EDIT',
+  StoreTreeComponent = 'STORE_TREE_COMPONENT',
 }
 
 export const storeComponentTypesAction = createAction<ITreeHierachyStateContext, FlattenedAllowedComponentTypesDto>(
@@ -53,4 +55,9 @@ export const storeSelectedTreeNodeAction = createAction<ITreeHierachyStateContex
 export const actionComponentEditAction = createAction<ITreeHierachyStateContext, IComponentCreateEditState>(
   TreeHierachyActionEnums.ActionComponentEdit,
   (componentCreateEditState) => ({ componentCreateEditState: { ...componentCreateEditState, mode: 'edit' } })
+);
+
+export const storeTreeComponentAction = createAction<ITreeHierachyStateContext, DynamicDtoComponentGuid>(
+  TreeHierachyActionEnums.StoreTreeComponent,
+  (selectedComponentDetails) => ({ selectedComponentDetails })
 );

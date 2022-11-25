@@ -4,20 +4,16 @@ import { getLayout } from 'src/components/layouts';
 import { CustomToolbarDropdown, TreeHierachy } from 'components';
 import { NodeIndexOutlined, PlusOutlined } from '@ant-design/icons';
 import { ICustomToolbarDropdownProps } from 'src/components/global/customToolbarDropdown';
-import { useGet } from 'restful-react';
 import _ from 'lodash';
 import { IPerformanceReportDto } from 'models';
 import { cTypeFormPathId } from 'src/components/global/customToolbarDropdown/util';
 import { useTreeHierachy } from 'providers';
 import { ComponentTypeIcons } from 'src/enums/componentTypeIcons';
+import { DynamicDtoPerformanceReportGuid, usePerformanceReportGet } from 'src/api/performanceReport';
 
 export const PerfomanceReportPanningPage: PageWithLayout<{ id: string }> = ({ id }) => {
-  const { data, refetch, loading } = useGet({
-    lazy: true,
-    path: '/api/services/Epm/PerformanceReport/Get',
-    queryParams: { id },
-  });
-  const performanceReport: IPerformanceReportDto = data?.result;
+  const { data, refetch, loading } = usePerformanceReportGet({ queryParams: { id } });
+  const performanceReport: DynamicDtoPerformanceReportGuid = (data as any)?.result;
 
   const {
     actionComponentCreate,
@@ -31,7 +27,7 @@ export const PerfomanceReportPanningPage: PageWithLayout<{ id: string }> = ({ id
 
   useEffect(() => {
     storeSelectedTreeNode(null);
-    fetchTreeDataRequest();
+    fetchTreeDataRequest(id);
     if (!_.isEmpty(id)) refetch();
   }, []);
 

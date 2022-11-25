@@ -1,5 +1,6 @@
 import { DataNode } from 'antd/lib/tree';
 import { ComponentFormMode } from 'typings/tree-hierachy';
+import { DynamicDtoComponentGuid } from 'src/api/component';
 
 export interface IComponentCreateEditState {
   formPath: string;
@@ -16,7 +17,7 @@ export interface CustomDataNode extends Omit<DataNode, 'children'> {
   parent: string;
   orderIndex: number;
   ComponentType: string;
-  PerformanceReport: string;
+  performanceReport: string;
   children: CustomDataNode[];
 }
 

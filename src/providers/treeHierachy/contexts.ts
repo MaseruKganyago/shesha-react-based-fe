@@ -1,3 +1,4 @@
+import { DynamicDtoComponentGuid } from 'api/component';
 import { FlattenedAllowedComponentTypesDto, IFlagsSetters, IFlagsState } from 'models';
 import { IComponentCreateEditState, CustomDataNode } from 'models/treeHierachy';
 import { createContext } from 'react';
@@ -16,6 +17,7 @@ export interface ITreeHierachyStateContext
   treeData?: CustomDataNode[];
   fetchTreeDataErr?: any;
   selectedTreeNode?: CustomDataNode;
+  selectedComponentDetails?: DynamicDtoComponentGuid;
 }
 
 export interface ITreeHierachyActionsContext
@@ -23,9 +25,10 @@ export interface ITreeHierachyActionsContext
   /* NEW_ACTION_ACTION_DECLARATION_GOES_HERE */
   actionComponentCreate: (state: IComponentCreateEditState) => void;
   toggleFormRendererMode: (mode: FormRendererMode) => void;
-  fetchTreeDataRequest: () => void;
+  fetchTreeDataRequest: (performanceReportId: string) => void;
   storeSelectedTreeNode: (node: CustomDataNode) => void;
   actionComponentEdit: (state: IComponentCreateEditState) => void;
+  storeTreeComponent: (component: DynamicDtoComponentGuid) => void;
 }
 
 export const TREE_HIERACHY_CONTEXT_INITIAL_STATE: ITreeHierachyStateContext = {

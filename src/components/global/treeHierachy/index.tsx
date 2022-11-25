@@ -17,12 +17,13 @@ const TreeHierachy: FC<IProps> = ({}) => {
 
   const onSelect = (key: React.Key[], info: any) => {
     const selectedNode = info.node as EventDataNode<CustomDataNode>;
+    console.log('selectedNode :>> ', selectedNode);
 
     storeSelectedTreeNode(selectedNode);
     actionComponentEdit({
       componentTypeId: selectedNode?.ComponentType,
       formPath: selectedNode?.adminTreeCreateForm,
-      performanceReportId: selectedNode?.PerformanceReport,
+      performanceReportId: selectedNode?.performanceReport,
     });
     toggleFormRendererMode('editable');
   };

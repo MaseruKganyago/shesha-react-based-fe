@@ -1,10 +1,11 @@
 import { FormInstance } from 'antd';
+import { DynamicDtoComponentGuid } from 'api/component';
 import { IComponentCreateEditState } from 'models';
 import { ComponentDto } from 'models/component';
 import { CustomDataNode } from 'models/treeHierachy';
 
 export const preparePayload = (
-  values: ComponentDto,
+  values: DynamicDtoComponentGuid,
   componentCreateEditState: IComponentCreateEditState,
   selectedTreeNode: CustomDataNode
 ) => {
@@ -28,20 +29,14 @@ export const preparePayload = (
   }
 };
 
-export const prepareFormForEdit = (form: FormInstance<ComponentDto>, selectedTreeNode: CustomDataNode) => {
+export const prepareFormForEdit = (form: FormInstance<DynamicDtoComponentGuid>, component: DynamicDtoComponentGuid) => {
   form.setFieldsValue({
-    id: selectedTreeNode?.key.toString(),
-    orderIndex: selectedTreeNode?.orderIndex,
-    name: selectedTreeNode?.title.toString(),
-    parent: selectedTreeNode?.parent,
+    ...component,
   });
 };
 
-export const initiateValues = (selectedTreeNode: CustomDataNode) => {
+export const initiateValues = (component: DynamicDtoComponentGuid): DynamicDtoComponentGuid => {
   return {
-    id: selectedTreeNode?.key.toString(),
-    orderIndex: selectedTreeNode?.orderIndex,
-    name: selectedTreeNode?.title.toString(),
-    parent: selectedTreeNode?.parent,
+    ...component,
   };
 };
