@@ -3,7 +3,7 @@ import { EventDataNode } from 'antd/lib/tree';
 import { FC } from 'react';
 import { TreeeContainer, TreeHierachyContainer, TreeSelectedInfo } from './styles';
 import { TreeHierachyFormsRenderer, TreeNodeIconRenderer } from 'components';
-import { useTreeHierachy } from 'providers';
+import { useGlobalConfigManager, useTreeHierachy } from 'providers';
 import { CustomDataNode } from 'models/treeHierachy';
 import { assignNodeIcons } from '../treeNodeIconRenderer';
 
@@ -13,6 +13,7 @@ const { Title } = Typography;
 
 const TreeHierachy: FC<IProps> = ({}) => {
   const { treeData, storeSelectedTreeNode, actionComponentEdit, toggleFormRendererMode } = useTreeHierachy();
+  const { storeSelectedComponentIdGlobally } = useGlobalConfigManager();
   const ICONED_TREE_DATA = treeData?.map((a) => assignNodeIcons(a));
 
   const onSelect = (key: React.Key[], info: any) => {
@@ -20,6 +21,7 @@ const TreeHierachy: FC<IProps> = ({}) => {
     console.log('selectedNode :>> ', selectedNode);
 
     storeSelectedTreeNode(selectedNode);
+    storeSelectedComponentIdGlobally(selectedNode?.key.toString());
     actionComponentEdit({
       componentTypeId: selectedNode?.ComponentType,
       formPath: selectedNode?.adminTreeCreateForm,

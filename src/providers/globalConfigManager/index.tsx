@@ -4,6 +4,7 @@ import { PersonIdRoleNamesDto } from 'models';
 import React, { FC, PropsWithChildren, useContext, useEffect, useReducer } from 'react';
 import { useGet } from 'restful-react';
 import { getFlagSetters } from '../utils/flagsSetters';
+import { storeSelectedComponentIdGloballyAction } from './actions';
 import {
   GlobalConfigManagerActionsContext,
   GlobalConfigManagerStateContext,
@@ -14,6 +15,7 @@ import { globalConfigManagerReducer } from './reducer';
 const EPM_GLOBAL_STATES = Object.freeze({
   CurrentLoggedInPersonId: 'EPM_CURRENT_LOGGED_IN_PERSON_ID',
   ProgressReportStatus: 'PROGRESS_REPORT_STATUS',
+  SelectedComponentId: 'SELECTED_COMPONENT_ID',
 });
 
 const GlobalConfigManagerProvider: FC<PropsWithChildren<any>> = ({ children }) => {
@@ -35,11 +37,9 @@ const GlobalConfigManagerProvider: FC<PropsWithChildren<any>> = ({ children }) =
     if (data && !loading) {
       const res = data?.result as PersonIdRoleNamesDto;
       setGlobalState({ key: EPM_GLOBAL_STATES.CurrentLoggedInPersonId, data: res?.id });
-      console.log('setted PersonId :>> ');
 
       const isResponsibleReporting = res?.roles?.includes(EpmRoles.ResponsibleReporting);
       if (isResponsibleReporting) {
-        console.log('set :>> ');
         setGlobalState({ key: EPM_GLOBAL_STATES.ProgressReportStatus, data: NodeProgressReportStatus.Outstanding });
       }
 
@@ -61,9 +61,22 @@ const GlobalConfigManagerProvider: FC<PropsWithChildren<any>> = ({ children }) =
     }
   }, [data]);
   //#endregion
+
+  const storeSelectedComponentIdGlobally = (componentId: string) => {
+    dispatch(storeSelectedComponentIdGloballyAction());
+
+    setGlobalState({ key: EPM_GLOBAL_STATES.SelectedComponentId, data: componentId });
+  };
+
   return (
     <GlobalConfigManagerStateContext.Provider value={state}>
-      <GlobalConfigManagerActionsContext.Provider value={{ ...getFlagSetters(dispatch) /* NEW_ACTION_GOES_HERE */ }}>
+      <GlobalConfigManagerActionsContext.Provider
+        value={{
+          ...getFlagSetters(dispatch),
+          storeSelectedComponentIdGlobally,
+          /* NEW_ACTION_GOES_HERE */
+        }}
+      >
         {children}
       </GlobalConfigManagerActionsContext.Provider>
     </GlobalConfigManagerStateContext.Provider>

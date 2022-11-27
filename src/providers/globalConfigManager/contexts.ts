@@ -11,6 +11,7 @@ export interface IGlobalConfigManagerStateContext
 
 export interface IGlobalConfigManagerActionsContext
   extends IFlagsSetters<IFlagProgressFlags, IFlagSucceededFlags, IFlagErrorFlags, IFlagActionedFlags> {
+  storeSelectedComponentIdGlobally: (componentId: string) => void;
   /* NEW_ACTION_ACTION_DECLARATIO_GOES_HERE */
 }
 

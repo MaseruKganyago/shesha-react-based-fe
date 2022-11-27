@@ -14,7 +14,9 @@ export function globalConfigManagerReducer(
 
   switch (type) {
     case GlobalConfigManagerActionEnums.DefaultAction:
+    case GlobalConfigManagerActionEnums.StoreSelectedComponentIdGlobally:
       /* NEW_ACTION_ENUM_GOES_HERE */
+
       return {
         ...state,
         ...payload,

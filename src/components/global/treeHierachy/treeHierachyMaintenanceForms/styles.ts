@@ -8,3 +8,10 @@ export const TreeHierachyMaintenanceBtnsFooter = styled.div`
 export const StyledConfigurableForm = styled(ConfigurableForm)`
   min-height: 100px;
 `;
+
+export const FormContainer = styled.div`
+  max-height: 480px;
+  &.scroll {
+    margin: 0 !important;
+  }
+`;

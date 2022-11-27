@@ -1,8 +1,10 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { Dropdown, MenuProps, Space } from 'antd';
-import { useGet } from 'restful-react';
+import {
+  usePerformanceReportAllowedComponentTypesGetFlattenedAllowedComponentTypesByTemplateId,
+  FlattenedAllowedComponentTypesDto,
+} from 'src/api/performanceReportAllowedComponentTypes';
 import _ from 'lodash';
-import { FlattenedAllowedComponentTypesDto } from 'models';
 import { useTreeHierachy } from 'providers';
 
 export interface ICustomToolbarDropdownProps {
@@ -16,13 +18,12 @@ export interface ICustomToolbarDropdownProps {
 const CustomToolbarDropdown: FC<ICustomToolbarDropdownProps> = ({ onClick, icon, title, templateId, isRootNode }) => {
   const { selectedTreeNode } = useTreeHierachy();
 
-  const { data, refetch } = useGet({
+  const { data, refetch } = usePerformanceReportAllowedComponentTypesGetFlattenedAllowedComponentTypesByTemplateId({
     lazy: true,
-    path: '/api/v1/Epm/PerformanceReportAllowedComponentTypes/GetFlattenedAllowedComponentTypesByTemplateId',
-    queryParams: { id: templateId, parentComponentId: selectedTreeNode?.key },
+    queryParams: { id: templateId, parentComponentId: selectedTreeNode?.key.toString() },
   });
 
-  const componentTypes: FlattenedAllowedComponentTypesDto[] = data?.result;
+  const componentTypes: FlattenedAllowedComponentTypesDto[] = (data as any)?.result;
   const items: MenuProps['items'] =
     componentTypes
       ?.filter((a) => a.canBeRoot === isRootNode)

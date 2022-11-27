@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { IComponentCreateEditState, CustomDataNode } from 'models/treeHierachy';
 import React, { FC, PropsWithChildren, useContext, useEffect, useReducer } from 'react';
-import { useGet } from 'restful-react';
 import { FormRendererMode } from 'typings/tree-hierachy';
 import { getFlagSetters } from '../utils/flagsSetters';
 import {
@@ -18,7 +17,7 @@ import { TreeHierachyActionsContext, TreeHierachyStateContext, TREE_HIERACHY_CON
 import { treeHierachyReducer } from './reducer';
 import { BASE_URL } from 'src/api/utils/constants';
 import { DynamicDtoComponentGuid, useComponentGet } from 'api/component';
-import { message } from 'antd';
+import { notification } from 'antd';
 
 export interface ITreeHierachyProviderProps {}
 
@@ -51,7 +50,10 @@ const TreeHiearachyProvider: FC<PropsWithChildren<ITreeHierachyProviderProps>> =
     if (data && !loading) {
       const component = (data as any)?.result;
       storeTreeComponent(component);
-    } else if (error) message.error('Something went wrong retrieving component details.');
+    } else if (error)
+      notification.error({
+        message: 'Something went wrong retrieving component details.',
+      });
   }, [data]);
   //#endregion
 
