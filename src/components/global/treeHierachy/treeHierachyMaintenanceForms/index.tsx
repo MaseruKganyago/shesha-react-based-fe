@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useTreeHierachy } from 'providers';
 import { FC, useEffect, useState } from 'react';
 import { FormContainer, StyledConfigurableForm, TreeHierachyMaintenanceBtnsFooter } from './styles';
-import { initiateValues, prepareFormForEdit } from './util';
+import { initiateCreateValues, initiateValues, prepareFormForEdit } from './util';
 
 export interface ITreeHierachyMaintenanceForms {
   formId: string;
@@ -33,14 +33,6 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
     setShowSkeleton({ ...showSkeleton, doneLoading: false });
   }, [componentCreateEditState]);
 
-  useEffect(() => {
-    if (!_.isEmpty(selectedTreeNode?.key) && isCreateMode)
-      form.setFieldsValue({ ...form.getFieldsValue(), parent: selectedTreeNode?.key.toString() });
-    else if (isEditMode) {
-      prepareFormForEdit(form, selectedComponentDetails);
-    }
-  }, [selectedTreeNode, selectedComponentDetails]);
-
   return (
     <div className="tree-hierachy-maintenance-forms">
       {showSkeleton?.doneLoading ? (
@@ -50,7 +42,9 @@ export const TreeHierachyMaintenanceForms: FC<ITreeHierachyMaintenanceForms> = (
             mode="edit"
             form={form}
             formId={formId}
-            initialValues={!isCreateMode && initiateValues(selectedComponentDetails)}
+            initialValues={
+              !isCreateMode ? initiateValues(selectedComponentDetails) : initiateCreateValues(selectedComponentDetails)
+            }
             layout="horizontal"
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 13 }}

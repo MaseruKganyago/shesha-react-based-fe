@@ -8,7 +8,8 @@ import { DeleteButton } from './styles';
 interface IMaintenanceFormsDeleteButton {}
 
 const MaintenanceFormsDeleteButton: FC<IMaintenanceFormsDeleteButton> = () => {
-  const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest } = useTreeHierachy();
+  const { componentCreateEditState, selectedTreeNode, fetchTreeDataRequest, toggleFormRendererMode } =
+    useTreeHierachy();
   const {
     query: { id },
   } = useRouter();
@@ -22,19 +23,22 @@ const MaintenanceFormsDeleteButton: FC<IMaintenanceFormsDeleteButton> = () => {
   });
 
   const handleDelete = () => {
-    if (selectedTreeNode?.children.length > 0)
+    if (selectedTreeNode?.children?.length > 0)
       notification.error({
         message: 'Item has sub-item(s).',
         description: "Can't delete Item, with sub-items. Move sub-items in a different parent item in before deleting.",
         duration: 10,
       });
-    else
+    else {
+      console.log('called delete :>> ');
       deleteComponent({}).then((res) => {
         if (res?.success) {
           message.success(`Component was succesfull Deleted.`);
           fetchTreeDataRequest(id.toString());
+          toggleFormRendererMode(null);
         }
       });
+    }
   };
 
   console.log('selectedTreeNode :>> ', selectedTreeNode);

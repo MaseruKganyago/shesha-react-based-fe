@@ -12,3 +12,9 @@ export const initiateValues = (component: DynamicDtoComponentGuid): DynamicDtoCo
     ...component,
   };
 };
+
+export const initiateCreateValues = (component: DynamicDtoComponentGuid): DynamicDtoComponentGuid => {
+  return {
+    parent: component?.id,
+  };
+};
